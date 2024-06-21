@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package nft_import;
+
+import "google/protobuf/wrappers.proto";
+
+import "types/collection.proto";
+import "types/token.proto";
+
+message ImportTokenArgs {
+  string smartContractAddress = 1;
+  string tokenId = 2;
+}
+
+message ImportCollectionArgs {
+  string smartContractAddress = 1;
+  optional string creatorAddress = 2;
+  string name = 3;
+  optional string description = 4;
+  optional string customUrl = 5;
+  optional string mintPageUrl = 6;
+  optional string thumbnailImageUrl = 7;
+  optional string bannerImageUrl = 8;
+  optional string minimumOffer = 9;
+  optional string burnContractAddress = 10;
+  optional string cooldownContractAddress = 11;
+  optional bool isVerified = 12;
+  optional bool isVisible = 13;
+  optional bool isMinting = 14;
+  types.FetcherConfig fetcherConfig = 15;
+}
+
+message ImportStakingContractArgs {
+  string collectionId = 1;
+  string stakingContractAddress = 2;
+}
+
+message DeleteCollectionArgs { string smartContractAddress = 1; }
+
+service NftImportService {
+  rpc importToken(ImportTokenArgs) returns (types.Token) {}
+  rpc importCollection(ImportCollectionArgs) returns (types.Collection) {}
+  rpc importStakingContract(ImportStakingContractArgs)
+      returns (google.protobuf.BoolValue) {}
+  rpc deleteCollection(DeleteCollectionArgs)
+      returns (google.protobuf.BoolValue) {}
+}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package types;
+
+message PaginationArgs {
+  int32 page = 1;
+  int32 perPage = 2;
+}
+
+message PaginationMeta {
+  int32 total = 1;
+  bool hasMore = 2;
+}

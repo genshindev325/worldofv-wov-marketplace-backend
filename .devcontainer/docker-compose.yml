@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  wov-marketplace-backend-ms:
+    build: .
+    network_mode: host
+    init: true
+    command: sleep infinity
+    working_dir: /wov-marketplace-backend-ms
+    volumes:
+      - ..:/wov-marketplace-backend-ms:cached
+      - history-data:/home/node/.bash_history
+      - terraform-data:/home/node/.terraform.d
+      - doctl-data:/home/node/.config/doctl
+
+  postgres:
+    image: postgres:14
+    network_mode: host
+    volumes: [wov-next-postgres-data:/var/lib/postgresql/data]
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+
+  redis:
+    image: redis:7
+    network_mode: host
+    volumes: [wov-next-redis-data:/var/lib/redis]
+
+  s3:
+    image: minio/minio:RELEASE.2022-05-19T18-20-59Z.hotfix.30a60091e
+    network_mode: host
+    command: server /data --address :9444 --console-address :8000
+    volumes: [wov-next-s3-data:/data]
+    environment:
+      MINIO_ROOT_USER: AKIAIOSFODNN7EXAMPLE
+      MINIO_ROOT_PASSWORD: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+
+  # This is used during the initial build to create the required buckets and set
+  # the correct permissions.
+  create-buckets:
+    image: minio/mc:latest
+    depends_on: [s3]
+    entrypoint: >
+      /bin/sh -c "
+      sleep 1;
+      /usr/bin/mc config host add s3 http://s3:9444 AKIAIOSFODNN7EXAMPLE wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY;
+      /usr/bin/mc mb --ignore-existing s3/wov-marketplace;
+      /usr/bin/mc policy set public s3/wov-marketplace;
+      exit 0;
+      "
+
+  # jaeger:
+  #   image: jaegertracing/all-in-one:1
+  #   network_mode: host
+
+volumes:
+  wov-next-redis-data:
+  wov-next-postgres-data:
+  wov-next-s3-data:
+  history-data:
+  terraform-data:
+  doctl-data:

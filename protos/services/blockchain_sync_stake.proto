@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package blockchain_sync_stake;
+
+import "google/protobuf/empty.proto";
+
+message FindStakingContractArgs { string stakingContractAddress = 1; }
+
+service BlockchainSyncStakeService {
+  rpc pushStakingContract(FindStakingContractArgs)
+      returns (google.protobuf.Empty) {}
+  rpc removeStakingContract(FindStakingContractArgs)
+      returns (google.protobuf.Empty) {}
+}

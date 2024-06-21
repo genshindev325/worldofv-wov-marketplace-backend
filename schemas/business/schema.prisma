@@ -1,0 +1,43 @@
+generator client {
+    provider        = "prisma-client-js"
+    output          = "../../node_modules/@prisma/client/business"
+    previewFeatures = ["metrics", "tracing"]
+    binaryTargets   = ["native", "linux-musl"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("BUSINESS_DATABASE_URL")
+}
+
+model Client {
+    id              String  @id
+    disposableCodes Boolean
+    uniqueClaimer   Boolean
+
+    secretCodes SecretCode[]
+    claims      Claim[]
+}
+
+model SecretCode {
+    clientId String
+    value    String
+
+    client Client @relation(fields: [clientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+    claims Claim[]
+
+    @@id([clientId, value])
+}
+
+model Claim {
+    id              Int      @id @default(autoincrement())
+    clientId        String
+    secretCodeValue String
+    claimerAddress  String   @db.Citext
+    metadata        Json?    @db.JsonB
+    claimedAt       DateTime @updatedAt
+
+    client     Client     @relation(fields: [clientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    secretCode SecretCode @relation(fields: [clientId, secretCodeValue], references: [clientId, value], onDelete: Cascade, onUpdate: Cascade)
+}

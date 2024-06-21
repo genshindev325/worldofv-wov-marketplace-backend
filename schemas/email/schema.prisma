@@ -1,0 +1,46 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../../node_modules/@prisma/client/email"
+  binaryTargets   = ["native", "linux-musl"]
+  previewFeatures = ["metrics", "tracing"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("EMAIL_DATABASE_URL")
+}
+
+model Templates {
+  key        TemplateKey @id
+  templateId String      @unique
+  isEnabled  Boolean     @default(true)
+}
+
+model Email {
+  id           String      @id
+  key          TemplateKey
+  data         Json?
+  status       EmailStatus @default(UNKNOWN)
+  failedReason String?
+  sentAt       DateTime    @default(now()) @updatedAt
+}
+
+enum EmailStatus {
+  UNKNOWN
+  SENT
+  FAILED
+}
+
+enum TemplateKey {
+  AUCTION_ENDING_SOON
+  AUCTION_OUTBID
+  AUCTION_BID_CONFIRMED
+  AUCTION_WON
+  AUCTION_SETTLED
+  AUCTION_NFT_SOLD
+  AUCTION_NFT_NOT_SOLD
+  AUCTION_CREATED
+
+  OFFER_RECEIVED
+  OFFER_ACCEPTED
+}

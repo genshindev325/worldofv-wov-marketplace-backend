@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package types;
+
+import "types/edition.proto";
+
+message TokenAttribute {
+  string trait_type = 1;
+  string value = 2;
+}
+
+message Token {
+  string tokenId = 1;
+  string smartContractAddress = 2;
+  string name = 3;
+  optional string description = 4;
+  string creatorAddress = 5;
+  int32 editionsCount = 6;
+  float royalty = 7;
+  repeated string categories = 8;
+  repeated TokenAttribute attributes = 9;
+  optional float score = 10;
+  optional int32 rank = 11;
+  optional string collectionId = 12;
+  string imageUrl = 13;
+  string imageMimeType = 14;
+  int32 mintedAt = 15;
+  string stakingEarnings = 16;
+  repeated Edition editions = 17;
+}

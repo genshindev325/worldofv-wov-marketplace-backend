@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package types;
+
+message Sale {
+  string saleId = 1;
+  string tokenId = 2;
+  string editionId = 3;
+  string smartContractAddress = 4;
+  string sellerAddress = 5;
+  optional string buyerAddress = 6;
+  string price = 7;
+  optional string addressVIP180 = 8;
+  string startingTime = 9;
+  optional string status = 10;
+  optional int32 createdAt = 11;
+  optional int32 updatedAt = 12;
+}

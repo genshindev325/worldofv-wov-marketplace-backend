@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package types;
+
+message AssetSource {
+  oneof source {
+    string url = 1;
+    bytes buffer = 2;
+  }
+}
+
+enum AssetSize {
+  STATIC_COVER_128 = 0;
+  STATIC_COVER_256 = 1;
+  STATIC_COVER_512 = 2;
+  ANIMATED_INSIDE_512 = 3;
+  ANIMATED_INSIDE_1024 = 4;
+  ORIGINAL = 5;
+}
+
+message Asset {
+  string url = 1;
+  string mimeType = 2;
+  AssetSize size = 3;
+}

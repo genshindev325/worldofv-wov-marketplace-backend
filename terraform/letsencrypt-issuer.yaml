@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+
+kind: ClusterIssuer
+
+metadata: { name: letsencrypt-issuer }
+
+spec:
+  acme:
+    email: services@herakel.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef: { name: letsencrypt-certificate }
+    solvers: [{ http01: { ingress: { class: nginx } } }]

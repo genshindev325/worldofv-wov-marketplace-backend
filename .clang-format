@@ -1,0 +1,3 @@
+# Used for formatting proto files
+BasedOnStyle: LLVM
+IndentWidth: 2

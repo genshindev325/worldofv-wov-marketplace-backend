@@ -1,0 +1,70 @@
+generator client {
+    provider        = "prisma-client-js"
+    output          = "../../node_modules/@prisma/client/aplos-stats"
+    binaryTargets   = ["native", "linux-musl"]
+    previewFeatures = ["metrics"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("APLOS_STATS_DATABASE_URL")
+}
+
+model Collections {
+    id String @id
+
+    contractAddress String @db.Citext
+    collectionSize  Int
+
+    name String? @db.Citext
+
+    floorPriceVET String?
+    floorPriceWOV String?
+
+    averagePriceVET String?
+    averagePriceWOV String?
+
+    itemsForSale Int?
+
+    highestOfferVET String?
+    highestOfferWOV String?
+
+    marketplace Marketplace
+
+    saleStats SaleStats[]
+
+    createdAt DateTime @updatedAt
+}
+
+model SaleStats {
+    id Int @id @default(autoincrement())
+
+    interval Interval
+
+    volumeVET              String?
+    volumeWOV              String?
+    volumeSumInVet         String?
+    itemsSold              Int?
+    distinctItemsSold      Int?
+    percentageChangeVolVET String?
+    percentageChangeVolWOV String?
+    percentageChangeItems  String?
+    ownerCount             Int     @default(0)
+
+    Collections   Collections @relation(fields: [collectionsId], references: [id])
+    collectionsId String
+}
+
+enum Interval {
+    H24
+    D7
+    D30
+    ALL
+}
+
+enum Marketplace {
+    WOV
+    VESEA
+    OTHER
+    ALL
+}

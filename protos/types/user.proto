@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package types;
+
+enum VerifiedStatus {
+  NOT_VERIFIED = 0;
+  VERIFIED = 1;
+  CURATED = 2;
+}
+
+enum ProfileTabs {
+  COLLECTED = 0;
+  CREATED = 1;
+  ON_SALE = 2;
+  ON_AUCTION = 3;
+  COLLECTIONS = 4;
+};
+
+message User {
+  string address = 1;
+  optional int32 profileId = 2;
+  optional string name = 3;
+  optional string description = 4;
+  optional string email = 5;
+  optional string customUrl = 6;
+  optional string websiteUrl = 7;
+  optional string facebookUrl = 8;
+  optional string twitterUrl = 9;
+  optional string discordUrl = 10;
+  optional string instagramUrl = 11;
+  optional bool blacklisted = 12;
+  optional bool verified = 13;
+  optional VerifiedStatus verifiedLevel = 14;
+  optional string profileImageUrl = 15;
+  optional string bannerImageUrl = 16;
+  optional ProfileTabs landingTab = 17;
+  optional bool isAdmin = 18;
+  optional bool showEmail = 19;
+  optional bool showBalance = 20;
+  optional bool isEmailNotificationEnabled = 21;
+  optional string firstName = 22;
+  optional string lastName = 23;
+}

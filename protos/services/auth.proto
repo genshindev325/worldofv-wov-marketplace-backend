@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package auth;
+
+import "types/user.proto";
+
+message Annex {
+  string domain = 1;
+  string signer = 2;
+  int32 timestamp = 3;
+}
+
+message ValidateCertificateArgs {
+  Annex annex = 1;
+  optional string signature = 2;
+}
+
+message LoginResponse {
+  string jwt = 1;
+  types.User user = 2;
+}
+
+service AuthService {
+  rpc login(ValidateCertificateArgs) returns (LoginResponse) {}
+}

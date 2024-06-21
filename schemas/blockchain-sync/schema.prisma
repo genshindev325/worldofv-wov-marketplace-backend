@@ -1,0 +1,39 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../../node_modules/@prisma/client/blockchain"
+  binaryTargets   = ["native", "linux-musl"]
+  previewFeatures = ["metrics", "tracing"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("BLOCKCHAIN_DATABASE_URL")
+}
+
+enum BlockchainEventStatus {
+  SAVED
+  FAILED
+  COMPLETED
+  STOPPED
+}
+
+// We have another index on the meta->blockNumber field that was created manually
+// since indexes on JSON subfields are not supported by prisma.
+
+model BlockchainEvent {
+  jobId        String                @id
+  address      String                @db.Citext
+  event        String
+  signature    String
+  returnValues Json                  @db.JsonB
+  meta         Json                  @db.JsonB
+  raw          Json                  @db.Json
+  status       BlockchainEventStatus
+
+  @@index([address])
+  @@index([event])
+  @@index([jobId])
+  @@index([status])
+  @@index([meta(ops: JsonbPathOps)], type: Gin)
+  @@index([returnValues(ops: JsonbPathOps)], type: Gin)
+}

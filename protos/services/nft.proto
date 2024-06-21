@@ -1,0 +1,271 @@
+syntax = "proto3";
+
+package nft;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+import "types/brand.proto";
+import "types/token.proto";
+import "types/edition.proto";
+import "types/collection.proto";
+import "types/offer.proto";
+import "types/serialized_json.proto";
+
+message FindOneTokenArgs {
+  string tokenId = 1;
+  string smartContractAddress = 2;
+}
+
+message TokenExistsArgs {
+  string smartContractAddress = 1;
+  optional string tokenId = 2;
+  optional string name = 3;
+}
+
+message UpsertTokenData {
+  string tokenId = 1;
+  string smartContractAddress = 2;
+  string name = 3;
+  optional string description = 4;
+  string creatorAddress = 5;
+  int32 editionsCount = 6;
+  float royalty = 7;
+  repeated string categories = 8;
+  repeated types.TokenAttribute attributes = 9;
+  optional float score = 10;
+  optional int32 rank = 11;
+  optional string collectionId = 12;
+  string sourceImageUrl = 13;
+  int32 mintedAt = 14;
+  string stakingEarnings = 15;
+  optional string collectionName = 16;
+  repeated types.Edition editions = 17;
+}
+
+message UpsertTokenArgs {
+  FindOneTokenArgs where = 1;
+  UpsertTokenData data = 2;
+}
+
+message GetGenesisCountBySetArgs { optional string ownerAddress = 1; }
+
+message SearchTokensByStringArgs {
+  optional string text = 1;
+  optional int32 limit = 2;
+}
+
+message SearchCollectionsByStringArgs {
+  optional string text = 1;
+  optional int32 limit = 2;
+  optional bool onlyStakable = 3;
+}
+
+message CollectionResyncArgs {
+  optional string smartContractAddress = 1;
+  repeated string tokenIds = 2;
+}
+
+message FindOneEditionArgs {
+  string editionId = 1;
+  string smartContractAddress = 2;
+}
+
+message UpdateEditionArgs {
+  FindOneEditionArgs where = 1;
+  types.Edition data = 2;
+}
+
+message FindOneCollectionArgs {
+  optional string collectionId = 1;
+  optional string blockchainId = 2;
+  optional string smartContractAddress = 3;
+  optional string customUrl = 4;
+}
+message ResyncCollectionMetadataArgs {
+  message ResyncCollectionMetadataConfig { optional float overrideRoyalty = 1; }
+
+  optional string collectionId = 1;
+  optional string blockchainId = 2;
+  optional string smartContractAddress = 3;
+  optional string customUrl = 4;
+  optional ResyncCollectionMetadataConfig config = 5;
+}
+
+message OverrideTokenMetadataArgs {
+  message TokenMetadata {
+    string tokenId = 1;
+    optional double score = 2;
+    optional uint32 rank = 3;
+  }
+
+  string smartContractAddress = 1;
+  repeated TokenMetadata metadata = 2;
+}
+
+message UpsertCollectionArgs {
+  FindOneCollectionArgs where = 1;
+  types.Collection data = 2;
+}
+
+message GetGenerationRateArgs {
+  optional string ownerAddress = 1;
+  optional string smartContractAddress = 2;
+}
+
+message GetWoVCollectionsResponse { repeated types.Collection items = 1; }
+
+message FindManyEditionsResponse { repeated types.Edition editions = 1; }
+
+message FindManyTokensResponse { repeated types.Token tokens = 1; }
+
+message FindManyCollectionsResponse {
+  repeated types.Collection collections = 1;
+}
+
+message GenerationRateResponse { string stakingEarnings = 1; }
+
+message GenesisCount {
+  string set = 1;
+  int32 count = 2;
+}
+
+message GenesisCountResponse { repeated GenesisCount counts = 1; }
+
+message TokenCollection { optional bool isVerified = 1; }
+
+message SearchTokens {
+  string tokenId = 1;
+  string smartContractAddress = 2;
+  string name = 3;
+  string imageUrl = 4;
+  string imageMimeType = 5;
+  optional TokenCollection collection = 6;
+}
+
+message SearchTokensByStringResponse { repeated SearchTokens tokens = 1; }
+
+message SearchCollections {
+  string collectionId = 1;
+  optional string smartContractAddress = 2;
+  string name = 3;
+  optional string customUrl = 4;
+  optional string thumbnailImageUrl = 5;
+  optional bool isVerified = 6;
+  repeated string stakingContractAddresses = 7;
+}
+
+message SearchCollectionsByStringResponse {
+  repeated SearchCollections collections = 1;
+}
+
+message CollectionTokenAttributesValue {
+  string value = 1;
+  int32 count = 2;
+}
+
+message CollectionTokenAttributesItem {
+  string key = 1;
+  repeated CollectionTokenAttributesValue values = 2;
+}
+
+message GetCollectionAttributesResponse {
+  repeated CollectionTokenAttributesItem attributes = 1;
+}
+
+message Price {
+  optional string price = 1;
+  optional string addressVIP180 = 2;
+}
+
+message CollectionStats {
+  optional int32 itemsCount = 1;
+  optional int32 ownersCount = 2;
+  repeated Price floorPrices = 3;
+  optional int32 offersCount = 4;
+  optional types.Offer highestCollectionOffer = 5;
+}
+
+message GetWoVCollectionsArgs {
+  optional string ownerAddress = 1;
+  optional string brandId = 2;
+}
+
+message BaseReSyncArgs {
+  optional int32 skip = 1;
+  optional int32 take = 2;
+}
+
+message DoneResponse { bool done = 1; }
+
+message DeleteResponse { bool deleted = 1; }
+
+message GetAllBrandsResponse { repeated types.Brand brands = 1; }
+
+message FindUniqueBrandArgs { string id = 1; }
+
+message UpsertBrandArgs {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string thumbnailImageUrl = 4;
+  optional uint32 position = 5;
+}
+
+service TokenService {
+  rpc exists(TokenExistsArgs) returns (google.protobuf.BoolValue) {}
+  rpc findOne(FindOneTokenArgs) returns (types.Token) {}
+  rpc findFirst(types.SerializedJson) returns (types.Token) {}
+  rpc findUnique(types.SerializedJson) returns (types.Token) {}
+  rpc findMany(types.SerializedJson) returns (FindManyTokensResponse) {}
+  rpc upsert(UpsertTokenArgs) returns (types.Token) {}
+  rpc update(types.SerializedJson) returns (types.Token) {}
+  rpc create(types.Token) returns (types.Token) {}
+  rpc count(types.SerializedJson) returns (google.protobuf.Int32Value) {}
+  rpc SearchTokensByString(SearchTokensByStringArgs)
+      returns (SearchTokensByStringResponse) {}
+  rpc getGenesisCountBySet(GetGenesisCountBySetArgs)
+      returns (GenesisCountResponse) {}
+  rpc getGenerationRate(GetGenerationRateArgs)
+      returns (GenerationRateResponse) {}
+  rpc delete (FindOneTokenArgs) returns (DeleteResponse) {}
+  rpc overrideMetadata(OverrideTokenMetadataArgs)
+      returns (google.protobuf.Empty) {}
+}
+
+service EditionService {
+  rpc update(types.SerializedJson) returns (types.Edition) {}
+  rpc upsert(types.SerializedJson) returns (types.Edition) {}
+  rpc findOne(types.SerializedJson) returns (types.Edition) {}
+  rpc findMany(types.SerializedJson) returns (FindManyEditionsResponse) {}
+  rpc exists(FindOneEditionArgs) returns (google.protobuf.BoolValue) {}
+  rpc count(types.SerializedJson) returns (google.protobuf.Int32Value) {}
+  rpc delete (FindOneEditionArgs) returns (DeleteResponse) {}
+}
+
+service CollectionService {
+  rpc findOne(FindOneCollectionArgs) returns (types.Collection) {}
+  rpc findUnique(types.SerializedJson) returns (types.Collection) {}
+  rpc findMany(types.SerializedJson) returns (FindManyCollectionsResponse) {}
+  rpc findFirst(types.SerializedJson) returns (types.Collection) {}
+  rpc upsert(UpsertCollectionArgs) returns (types.Collection) {}
+  rpc create(types.SerializedJson) returns (types.Collection) {}
+  rpc update(types.SerializedJson) returns (types.Collection) {}
+  rpc delete (types.SerializedJson) returns (DoneResponse) {}
+  rpc getWoVCollections(GetWoVCollectionsArgs)
+      returns (GetWoVCollectionsResponse) {}
+  rpc getTokenAttributes(FindOneCollectionArgs)
+      returns (GetCollectionAttributesResponse) {}
+  rpc SearchCollectionsByString(SearchCollectionsByStringArgs)
+      returns (SearchCollectionsByStringResponse) {}
+  rpc getStats(FindOneCollectionArgs) returns (CollectionStats) {}
+  rpc resyncOwners(CollectionResyncArgs) returns (google.protobuf.Empty) {}
+  rpc resyncStaking(CollectionResyncArgs) returns (google.protobuf.Empty) {}
+  rpc resyncAssets(CollectionResyncArgs) returns (google.protobuf.Empty) {}
+}
+
+service BrandService {
+  rpc getAll(google.protobuf.Empty) returns (GetAllBrandsResponse) {}
+  rpc upsert(UpsertBrandArgs) returns (types.Brand) {}
+  rpc delete (FindUniqueBrandArgs) returns (google.protobuf.Empty) {}
+}

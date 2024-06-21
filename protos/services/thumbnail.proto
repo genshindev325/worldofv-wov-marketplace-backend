@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package thumbnail;
+
+import "google/protobuf/empty.proto";
+
+import "types/asset.proto";
+
+enum UserMediaType {
+  AVATAR = 0;
+  BANNER = 1;
+}
+
+message GetAssetsFilters { repeated types.AssetSize sizes = 1; }
+
+message CreateTokenAssetsArgs {
+  string smartContractAddress = 1;
+  string tokenId = 2;
+  optional types.AssetSource source = 3;
+}
+
+message GetTokenAssetsArgs {
+  string smartContractAddress = 1;
+  string tokenId = 2;
+  optional GetAssetsFilters filters = 3;
+}
+
+message GetManyTokenAssetsArgs {
+  message Identifier {
+    string smartContractAddress = 1;
+    string tokenId = 2;
+  }
+
+  repeated Identifier identifiers = 1;
+  optional GetAssetsFilters filters = 2;
+}
+
+message DeleteTokenAssetsArgs {
+  string smartContractAddress = 1;
+  string tokenId = 2;
+}
+
+message GenerateUserAssetsArgs { string address = 1; }
+
+message CreateUserAssetsArgs {
+  string address = 1;
+  UserMediaType mediaType = 2;
+  optional types.AssetSource source = 3;
+}
+
+message GetUserAssetsArgs {
+  string address = 1;
+  UserMediaType mediaType = 2;
+  optional GetAssetsFilters filters = 3;
+}
+
+message GetManyUserAssetsArgs {
+  repeated string addresses = 1;
+  UserMediaType mediaType = 2;
+  optional GetAssetsFilters filters = 3;
+}
+
+message GetAssetsResponse { repeated types.Asset assets = 1; }
+
+message GetManyAssetsResponse { map<string, GetAssetsResponse> items = 1; }
+
+service ImageThumbnailService {
+  rpc createTokenAssets(CreateTokenAssetsArgs) returns (types.Asset) {}
+  rpc getTokenAssets(GetTokenAssetsArgs) returns (GetAssetsResponse) {}
+  rpc getManyTokenAssets(GetManyTokenAssetsArgs)
+      returns (GetManyAssetsResponse) {}
+  rpc deleteTokenAssets(DeleteTokenAssetsArgs) returns (google.protobuf.Empty) {
+  }
+
+  rpc generateUserAssets(GenerateUserAssetsArgs) returns (types.Asset) {}
+  rpc createUserAssets(CreateUserAssetsArgs) returns (types.Asset) {}
+  rpc getUserAssets(GetUserAssetsArgs) returns (GetAssetsResponse) {}
+  rpc getManyUserAssets(GetManyUserAssetsArgs) returns (GetManyAssetsResponse) {
+  }
+}

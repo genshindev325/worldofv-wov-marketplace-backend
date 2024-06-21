@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package business;
+
+import "google/protobuf/empty.proto";
+
+import "types/serialized_json.proto";
+
+message CreateClientArgs {
+  string id = 1;
+  bool uniqueClaimer = 2;
+  bool disposableCodes = 3;
+  repeated string secretCodes = 4;
+}
+
+message CheckSecretCodeArgs {
+  string clientId = 1;
+  string secretCode = 2;
+  string claimerAddress = 3;
+}
+
+message ConsumeSecretCodeArgs {
+  string clientId = 1;
+  string secretCode = 2;
+  string claimerAddress = 3;
+  types.SerializedJson metadata = 4;
+}
+
+service BusinessService {
+  rpc createClient(CreateClientArgs) returns (google.protobuf.Empty) {}
+  rpc checkSecretCode(CheckSecretCodeArgs) returns (google.protobuf.Empty) {}
+  rpc consumeSecretCode(ConsumeSecretCodeArgs) returns (google.protobuf.Empty) {
+  }
+}

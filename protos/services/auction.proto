@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package auction;
+
+import "types/auction.proto";
+import "types/serialized_json.proto";
+
+message FindUniqueAuctionArgs { string auctionId = 1; }
+
+message FindManyAuctionsResponse { repeated types.Auction auctions = 1; }
+
+message GetAuctionHistoryArgs {
+  string auctionId = 1;
+  optional bool bidsOnly = 2;
+}
+
+message GetAuctionHistoryResponse { repeated types.AuctionHistory history = 1; }
+
+service AuctionService {
+  rpc findUnique(types.SerializedJson) returns (types.Auction) {}
+  rpc findFirst(types.SerializedJson) returns (types.Auction) {}
+  rpc findMany(types.SerializedJson) returns (FindManyAuctionsResponse) {}
+  rpc upsert(types.SerializedJson) returns (types.Auction) {}
+  rpc history(GetAuctionHistoryArgs) returns (GetAuctionHistoryResponse) {}
+}

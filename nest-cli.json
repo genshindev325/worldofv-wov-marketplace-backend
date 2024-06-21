@@ -1,0 +1,380 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/gateway/src",
+  "projects": {
+    "contract": {
+      "type": "library",
+      "root": "libs/contract",
+      "entryFile": "index",
+      "sourceRoot": "libs/contract/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/contract/tsconfig.lib.json"
+      }
+    },
+    "user": {
+      "type": "application",
+      "root": "apps/user",
+      "entryFile": "main",
+      "sourceRoot": "apps/user/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/user/tsconfig.app.json"
+      }
+    },
+    "gateway": {
+      "type": "application",
+      "root": "apps/gateway",
+      "entryFile": "main",
+      "sourceRoot": "apps/gateway/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/gateway/tsconfig.app.json"
+      }
+    },
+    "auth": {
+      "type": "application",
+      "root": "apps/auth",
+      "entryFile": "main",
+      "sourceRoot": "apps/auth/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/auth/tsconfig.app.json"
+      }
+    },
+    "nft": {
+      "type": "application",
+      "root": "apps/nft",
+      "entryFile": "main",
+      "sourceRoot": "apps/nft/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/nft/tsconfig.app.json"
+      }
+    },
+    "sale": {
+      "type": "application",
+      "root": "apps/sale",
+      "entryFile": "main",
+      "sourceRoot": "apps/sale/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/sale/tsconfig.app.json"
+      }
+    },
+    "auction": {
+      "type": "application",
+      "root": "apps/auction",
+      "entryFile": "main",
+      "sourceRoot": "apps/auction/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/auction/tsconfig.app.json"
+      }
+    },
+    "offer": {
+      "type": "application",
+      "root": "apps/offer",
+      "entryFile": "main",
+      "sourceRoot": "apps/offer/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/offer/tsconfig.app.json"
+      }
+    },
+    "collection": {
+      "type": "application",
+      "root": "apps/collection",
+      "entryFile": "main",
+      "sourceRoot": "apps/collection/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/collection/tsconfig.app.json"
+      }
+    },
+    "nft-import": {
+      "type": "application",
+      "root": "apps/nft-import",
+      "entryFile": "main",
+      "sourceRoot": "apps/nft-import/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/nft-import/tsconfig.app.json"
+      }
+    },
+    "marketplace": {
+      "type": "application",
+      "root": "apps/marketplace",
+      "entryFile": "main",
+      "sourceRoot": "apps/marketplace/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/marketplace/tsconfig.app.json"
+      }
+    },
+    "file-reader": {
+      "type": "library",
+      "root": "libs/file-reader",
+      "entryFile": "index",
+      "sourceRoot": "libs/file-reader/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/file-reader/tsconfig.lib.json"
+      }
+    },
+    "s3": {
+      "type": "library",
+      "root": "libs/s3",
+      "entryFile": "index",
+      "sourceRoot": "libs/s3/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/s3/tsconfig.lib.json"
+      }
+    },
+    "image-thumbnail": {
+      "type": "application",
+      "root": "apps/image-thumbnail",
+      "entryFile": "main",
+      "sourceRoot": "apps/image-thumbnail/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/image-thumbnail/tsconfig.app.json"
+      }
+    },
+    "blockchain-sync-nft": {
+      "type": "application",
+      "root": "apps/blockchain-sync-nft",
+      "entryFile": "main",
+      "sourceRoot": "apps/blockchain-sync-nft/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/blockchain-sync-nft/tsconfig.app.json"
+      }
+    },
+    "blockchain-sync-user": {
+      "type": "application",
+      "root": "apps/blockchain-sync-user",
+      "entryFile": "main",
+      "sourceRoot": "apps/blockchain-sync-user/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/blockchain-sync-user/tsconfig.app.json"
+      }
+    },
+    "blockchain-sync-sale": {
+      "type": "application",
+      "root": "apps/blockchain-sync-sale",
+      "entryFile": "main",
+      "sourceRoot": "apps/blockchain-sync-sale/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/blockchain-sync-sale/tsconfig.app.json"
+      }
+    },
+    "blockchain-sync-auction": {
+      "type": "application",
+      "root": "apps/blockchain-sync-auction",
+      "entryFile": "main",
+      "sourceRoot": "apps/blockchain-sync-auction/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/blockchain-sync-auction/tsconfig.app.json"
+      }
+    },
+    "blockchain-sync-offer": {
+      "type": "application",
+      "root": "apps/blockchain-sync-offer",
+      "entryFile": "main",
+      "sourceRoot": "apps/blockchain-sync-offer/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/blockchain-sync-offer/tsconfig.app.json"
+      }
+    },
+    "blockchain-sync-pfp": {
+      "type": "application",
+      "root": "apps/blockchain-sync-pfp",
+      "entryFile": "main",
+      "sourceRoot": "apps/blockchain-sync-pfp/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/blockchain-sync-pfp/tsconfig.app.json"
+      }
+    },
+    "redis-client": {
+      "type": "library",
+      "root": "libs/redis-client",
+      "entryFile": "index",
+      "sourceRoot": "libs/redis-client/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/redis-client/tsconfig.lib.json"
+      }
+    },
+    "file-upload": {
+      "type": "library",
+      "root": "libs/file-upload",
+      "entryFile": "index",
+      "sourceRoot": "libs/file-upload/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/file-upload/tsconfig.lib.json"
+      }
+    },
+    "blockchain-sync-stake": {
+      "type": "application",
+      "root": "apps/blockchain-sync-stake",
+      "entryFile": "main",
+      "sourceRoot": "apps/blockchain-sync-stake/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/blockchain-sync-stake/tsconfig.app.json"
+      }
+    },
+    "email": {
+      "type": "application",
+      "root": "apps/email",
+      "entryFile": "main",
+      "sourceRoot": "apps/email/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/email/tsconfig.app.json"
+      }
+    },
+    "sendgrid": {
+      "type": "library",
+      "root": "libs/sendgrid",
+      "entryFile": "index",
+      "sourceRoot": "libs/sendgrid/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/sendgrid/tsconfig.lib.json"
+      }
+    },
+    "blockchain-stats": {
+      "type": "application",
+      "root": "apps/blockchain-stats",
+      "entryFile": "main",
+      "sourceRoot": "apps/blockchain-stats/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/blockchain-stats/tsconfig.app.json"
+      }
+    },
+    "price-conversion": {
+      "type": "application",
+      "root": "apps/price-conversion",
+      "entryFile": "main",
+      "sourceRoot": "apps/price-conversion/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/price-conversion/tsconfig.app.json"
+      }
+    },
+    "admin": {
+      "type": "application",
+      "root": "apps/admin",
+      "entryFile": "main",
+      "sourceRoot": "apps/admin/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/admin/tsconfig.app.json"
+      }
+    },
+    "blockchain-sync": {
+      "type": "library",
+      "root": "libs/blockchain-sync",
+      "entryFile": "index",
+      "sourceRoot": "libs/blockchain-sync/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/blockchain-sync/tsconfig.lib.json"
+      }
+    },
+    "marketplace-sync": {
+      "type": "application",
+      "root": "apps/marketplace-sync",
+      "entryFile": "main",
+      "sourceRoot": "apps/marketplace-sync/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/marketplace-sync/tsconfig.app.json"
+      }
+    },
+    "web3": {
+      "type": "library",
+      "root": "libs/web3",
+      "entryFile": "index",
+      "sourceRoot": "libs/web3/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/web3/tsconfig.lib.json"
+      }
+    },
+    "activity": {
+      "type": "application",
+      "root": "apps/activity",
+      "entryFile": "main",
+      "sourceRoot": "apps/activity/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/activity/tsconfig.app.json"
+      }
+    },
+    "grpc-options": {
+      "type": "library",
+      "root": "libs/grpc-options",
+      "entryFile": "index",
+      "sourceRoot": "libs/grpc-options/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/grpc-options/tsconfig.lib.json"
+      }
+    },
+    "price-conversion-cache": {
+      "type": "library",
+      "root": "libs/price-conversion-cache",
+      "entryFile": "index",
+      "sourceRoot": "libs/price-conversion-cache/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/price-conversion-cache/tsconfig.lib.json"
+      }
+    },
+    "aplos-stats": {
+      "type": "application",
+      "root": "apps/aplos-stats",
+      "entryFile": "main",
+      "sourceRoot": "apps/aplos-stats/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/aplos-stats/tsconfig.app.json"
+      }
+    },
+    "business": {
+      "type": "application",
+      "root": "apps/business",
+      "entryFile": "main",
+      "sourceRoot": "apps/business/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/business/tsconfig.app.json"
+      }
+    },
+    "tracing": {
+      "type": "library",
+      "root": "libs/tracing",
+      "entryFile": "index",
+      "sourceRoot": "libs/tracing/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/tracing/tsconfig.lib.json"
+      }
+    },
+    "dataloader": {
+      "type": "library",
+      "root": "libs/dataloader",
+      "entryFile": "index",
+      "sourceRoot": "libs/dataloader/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/dataloader/tsconfig.lib.json"
+      }
+    },
+    "metadata": {
+      "type": "application",
+      "root": "apps/metadata",
+      "entryFile": "main",
+      "sourceRoot": "apps/metadata/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/metadata/tsconfig.app.json"
+      }
+    },
+    "arweave": {
+      "type": "library",
+      "root": "libs/arweave",
+      "entryFile": "index",
+      "sourceRoot": "libs/arweave/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/arweave/tsconfig.lib.json"
+      }
+    },
+    "login": {
+      "type": "library",
+      "root": "libs/login",
+      "entryFile": "index",
+      "sourceRoot": "libs/login/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/login/tsconfig.lib.json"
+      }
+    }
+  },
+  "compilerOptions": {
+    "webpack": true
+  },
+  "monorepo": true,
+  "root": "apps/wov-marketplace-backend"
+}

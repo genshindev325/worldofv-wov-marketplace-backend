@@ -1,0 +1,64 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../../node_modules/@prisma/client/admin"
+  previewFeatures = ["metrics", "tracing"]
+  binaryTargets   = ["native", "linux-musl"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("ADMIN_DATABASE_URL")
+}
+
+model HomeBanner {
+  id           String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  image        String
+  position     Int     @db.SmallInt
+  collectionId String?
+  artist       String?
+  url          String?
+
+  @@index([position])
+}
+
+model VerifiedDrop {
+  id       String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  position Int      @db.SmallInt
+  dateTime DateTime
+
+  title    String?
+  imageUrl String?
+  address  String? @db.Citext
+
+  collectionId String? @unique
+  tokenId      String? @unique
+
+  @@index([position])
+}
+
+model TopArtist {
+  address  String @id @db.Citext
+  position Int    @db.SmallInt
+}
+
+model TopCollector {
+  address  String @id @db.Citext
+  position Int    @db.SmallInt
+}
+
+model HomeCollection {
+  id       String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  position Int      @db.SmallInt
+  title    String
+  startsAt DateTime
+
+  bannerImageUrl String
+  bannerLinkUrl  String
+
+  avatarImageUrl      String?
+  avatarLinkUrl       String?
+  avatarName          String?
+  avatarVerifiedLevel String?
+
+  @@index([position])
+}

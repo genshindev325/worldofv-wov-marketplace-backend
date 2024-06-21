@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package types;
+
+enum OfferType {
+  EDITION = 0;
+  TOKEN = 1;
+  COLLECTION = 2;
+}
+
+enum OfferStatus {
+  ACTIVE = 0;
+  ACCEPTED = 1;
+  CANCELLED = 2;
+}
+
+message Offer {
+  string offerId = 1;
+  string tokenId = 2;
+  string editionId = 3;
+  string smartContractAddress = 4;
+  string bidderAddress = 5;
+  optional string acceptorAddress = 6;
+  string price = 7;
+  optional string addressVIP180 = 8;
+  string startingTime = 9;
+  string endTime = 10;
+  OfferType type = 11;
+  OfferStatus status = 12;
+}

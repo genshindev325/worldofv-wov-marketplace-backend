@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+package types;
+
+message SerializedJson { string data = 1; }

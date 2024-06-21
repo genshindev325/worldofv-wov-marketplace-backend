@@ -1,0 +1,148 @@
+syntax = "proto3";
+
+package offer;
+
+import "google/protobuf/wrappers.proto";
+
+import "types/offer.proto";
+import "types/minimum-offer.proto";
+import "types/collection.proto";
+import "types/token.proto";
+import "types/asset.proto";
+import "types/user.proto";
+import "types/pagination.proto";
+import "types/serialized_json.proto";
+
+message FindUniqueOfferArgs { string offerId = 1; }
+
+message UpsertOfferArgs {
+  FindUniqueOfferArgs where = 1;
+  types.Offer data = 2;
+}
+
+message FindManyOffersResponse { repeated types.Offer offers = 1; }
+
+message FindHighestOfferArgs {
+  string smartContractAddress = 1;
+  optional string tokenId = 2;
+}
+
+message FindHighestOfferResponse { optional types.Offer offer = 1; }
+
+message FindManyHighestOffersArgs {
+  repeated string tokenIds = 1;
+  string smartContractAddress = 2;
+}
+
+message FindManyHighestOffersResponse { map<string, types.Offer> offers = 1; }
+
+message SendOfferEmailArgs {
+  string offerId = 1;
+  string emailType = 2;
+}
+
+service OfferService {
+  rpc findFirst(types.SerializedJson) returns (types.Offer) {}
+  rpc findUnique(types.SerializedJson) returns (types.Offer) {}
+  rpc findMany(types.SerializedJson) returns (FindManyOffersResponse) {}
+  rpc findHighest(FindHighestOfferArgs) returns (FindHighestOfferResponse) {}
+  rpc findManyHighest(FindManyHighestOffersArgs)
+      returns (FindManyHighestOffersResponse) {}
+  rpc count(types.SerializedJson) returns (google.protobuf.Int32Value) {}
+  rpc upsert(UpsertOfferArgs) returns (types.Offer) {}
+  rpc sendEmail(SendOfferEmailArgs) returns (google.protobuf.BoolValue) {}
+}
+
+message UpsertMinimumOfferArgs {
+  string smartContractAddress = 1;
+  string userAddress = 2;
+  optional string price = 3;
+}
+
+message FindMinimumOffersForUserArgs { string userAddress = 1; }
+
+message FindMinimumOffersForUserResponse {
+  repeated types.MinimumOffer items = 1;
+}
+
+service MinimumOfferService {
+  rpc findMinimumOffersForUser(FindMinimumOffersForUserArgs)
+      returns (FindMinimumOffersForUserResponse) {}
+  rpc upsert(UpsertMinimumOfferArgs) returns (types.MinimumOffer) {}
+}
+
+message AggregatedOfferEdition {
+  string smartContractAddress = 1;
+  string tokenId = 2;
+  string editionId = 3;
+  string ownerAddress = 4;
+  string tokenName = 5;
+  optional string stakingContractAddress = 6;
+  optional string saleId = 7;
+  optional string auctionId = 8;
+  optional string saleAddressVIP180 = 9;
+  optional double royalty = 10;
+  optional uint32 rank = 11;
+  optional types.Asset asset = 12;
+}
+
+message AggregatedOffer {
+  string offerId = 1;
+  string tokenId = 2;
+  string editionId = 3;
+  string smartContractAddress = 4;
+  string bidderAddress = 5;
+  optional string acceptorAddress = 6;
+  string price = 7;
+  optional string addressVIP180 = 8;
+  string startingTime = 9;
+  string endTime = 10;
+  types.OfferType type = 11;
+  types.OfferStatus status = 12;
+  types.Asset asset = 13;
+  optional types.Token token = 14;
+  optional types.Collection collection = 15;
+  optional types.User bidder = 16;
+  repeated AggregatedOfferEdition editions = 17;
+  optional types.Offer highestOffer = 18;
+}
+
+message GetOffersForUserFilters {
+  string smartContractAddress = 1;
+  repeated string tokenIds = 2;
+  repeated string editionIds = 3;
+  optional types.OfferType type = 4;
+}
+
+enum UserOfferType {
+  CREATED = 0;
+  RECEIVED = 1;
+}
+
+message GetOffersForUserArgs {
+  string address = 1;
+  UserOfferType type = 2;
+  optional string acceptorAddress = 3;
+  optional GetOffersForUserFilters filters = 4;
+  optional types.PaginationArgs pagination = 5;
+}
+
+message GetOffersForTokenArgs {
+  string smartContractAddress = 1;
+  string tokenId = 2;
+  optional string acceptorAddress = 3;
+}
+
+message AggregatedOffersResponse { repeated AggregatedOffer offers = 1; }
+
+message AggregatedOffersForUserResponse {
+  repeated AggregatedOffer offers = 1;
+  types.PaginationMeta meta = 2;
+}
+
+service OfferAggregationService {
+  rpc getOffersForUser(GetOffersForUserArgs)
+      returns (AggregatedOffersForUserResponse) {}
+  rpc getOffersForToken(GetOffersForTokenArgs)
+      returns (AggregatedOffersResponse) {}
+}

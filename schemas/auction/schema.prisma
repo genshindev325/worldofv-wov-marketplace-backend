@@ -1,0 +1,58 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../../node_modules/@prisma/client/auction"
+  binaryTargets   = ["native", "linux-musl"]
+  previewFeatures = ["metrics", "tracing"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("AUCTION_DATABASE_URL")
+}
+
+model Auction {
+  auctionId            String @id
+  tokenId              String
+  editionId            String
+  smartContractAddress String @db.Citext
+
+  sellerAddress        String  @db.Citext
+  settlorAddress       String? @db.Citext
+  highestBidderAddress String? @db.Citext
+
+  reservePrice  Decimal  @db.Decimal(78, 0)
+  highestBid    Decimal? @db.Decimal(78, 0)
+  addressVIP180 String?  @db.Citext
+
+  startingTime DateTime @db.Timestamptz()
+  endTime      DateTime @db.Timestamptz()
+
+  status AuctionStatus @default(UNKNOWN)
+
+  createdAt Int?
+  updatedAt Int?
+
+  @@index([smartContractAddress])
+  @@index([tokenId, smartContractAddress])
+  @@index([editionId, smartContractAddress])
+  @@index([tokenId, editionId, smartContractAddress])
+  @@index([sellerAddress])
+  @@index([settlorAddress])
+  @@index([highestBidderAddress])
+  @@index([reservePrice])
+  @@index([highestBid])
+  @@index([addressVIP180])
+  @@index([startingTime])
+  @@index([endTime])
+  @@index([status])
+  @@index([createdAt])
+  @@index([updatedAt])
+}
+
+enum AuctionStatus {
+  UNKNOWN
+  ACTIVE
+  CANCELLED
+  TO_SETTLE
+  SETTLED
+}

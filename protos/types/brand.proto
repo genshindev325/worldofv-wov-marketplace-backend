@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package types;
+
+message Brand {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string thumbnailImageUrl = 4;
+  uint32 position = 5;
+}

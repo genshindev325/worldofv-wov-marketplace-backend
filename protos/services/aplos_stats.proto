@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package aplos_stats;
+
+import "google/protobuf/empty.proto";
+
+import "types/collection.proto";
+import "types/user.proto";
+
+message FloorPrice {
+  optional string price = 1;
+  string currency = 2;
+}
+
+message CollectionStats {
+  string smartContactAddress = 1;
+  string name = 2;
+  optional types.Collection collection = 3;
+  FloorPrice floorPrice = 4;
+  int32 itemsSold = 5;
+  string volumeVET = 6;
+  string volumeWOV = 7;
+  string volumeSumInVet = 8;
+  optional string percentageChange = 9;
+  int32 ownerCount = 10;
+  int32 totalItemsSold = 11;
+  string totalVolumeVET = 12;
+  string totalVolumeWOV = 13;
+  string totalVolumeSumInVet = 14;
+  string averagePriceVET = 15;
+  string averagePriceWOV = 16;
+}
+
+message BuyerStats {
+  string buyerAddress = 1;
+  optional types.User user = 2;
+  int32 itemsBought = 3;
+  string volumeVET = 4;
+  string volumeWOV = 5;
+  string volumeSumInVet = 6;
+  optional string percentageChange = 7;
+  int32 totalItemsBought = 8;
+  string totalVolumeVET = 9;
+  string totalVolumeWOV = 10;
+  string totalVolumeSumInVet = 11;
+}
+
+message GetCollectionsStatsResponse {
+  repeated CollectionStats collectionStats = 1;
+}
+
+message AplosPaginationArgs {
+  optional string lastItemPrimary = 1;
+  int32 perPage = 2;
+}
+
+message GetCollectionsStatsArgs {
+  optional AplosPaginationArgs pagination = 1;
+  string timeframe = 2;
+}
+
+message GetBuyersStatsResponse { repeated BuyerStats buyersStats = 1; }
+
+message GetCurrentMonthFeesResponse { string fees = 1; }
+
+service AplosStatsService {
+  rpc getCollectionsStats(GetCollectionsStatsArgs)
+      returns (GetCollectionsStatsResponse) {}
+
+  rpc getBuyersStats(GetCollectionsStatsArgs) returns (GetBuyersStatsResponse) {
+  }
+
+  rpc getCurrentMonthFees(google.protobuf.Empty)
+      returns (GetCurrentMonthFeesResponse) {}
+}

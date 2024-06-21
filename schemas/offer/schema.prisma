@@ -1,0 +1,68 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../../node_modules/@prisma/client/offer"
+  binaryTargets   = ["native", "linux-musl"]
+  previewFeatures = ["metrics", "tracing"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("OFFER_DATABASE_URL")
+}
+
+model Offer {
+  offerId              String  @id
+  tokenId              String?
+  editionId            String?
+  smartContractAddress String  @db.Citext
+
+  bidderAddress   String  @db.Citext
+  acceptorAddress String? @db.Citext
+
+  price         Decimal @db.Decimal(78, 0)
+  addressVIP180 String? @db.Citext
+
+  startingTime DateTime @db.Timestamptz()
+  endTime      DateTime @db.Timestamptz()
+
+  type   OfferType
+  status OfferStatus
+
+  createdAt Int?
+  updatedAt Int?
+
+  @@index([smartContractAddress])
+  @@index([tokenId, smartContractAddress])
+  @@index([editionId, smartContractAddress])
+  @@index([tokenId, editionId, smartContractAddress])
+  @@index([bidderAddress])
+  @@index([acceptorAddress])
+  @@index([price])
+  @@index([addressVIP180])
+  @@index([startingTime])
+  @@index([endTime])
+  @@index([type])
+  @@index([status])
+  @@index([createdAt])
+  @@index([updatedAt])
+}
+
+model MinimumOffer {
+  smartContractAddress String   @db.Citext
+  userAddress          String   @db.Citext
+  price                Decimal? @db.Decimal(78, 0)
+
+  @@id([smartContractAddress, userAddress])
+}
+
+enum OfferType {
+  EDITION
+  TOKEN
+  COLLECTION
+}
+
+enum OfferStatus {
+  ACTIVE
+  ACCEPTED
+  CANCELLED
+}

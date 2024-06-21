@@ -1,0 +1,87 @@
+clone:
+  depth: full # SonarCloud scanner needs the full history.
+
+options:
+  docker: true
+
+definitions:
+  services:
+    docker:
+      memory: 2048
+
+pipelines:
+  branches:
+    master:
+      - step:
+          script:
+            - pipe: sonarsource/sonarcloud-scan:1.4.0
+            - pipe: sonarsource/sonarcloud-quality-gate:0.1.6
+
+      - step:
+          script: ['./ci-scripts/docker-build-cache.sh']
+
+      - parallel:
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh activity']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh admin']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh auction']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh auth']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh blockchain-stats']
+          - step:
+              script:
+                ['./ci-scripts/docker-build-app.sh blockchain-sync-auction']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh blockchain-sync-nft']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh blockchain-sync-offer']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh blockchain-sync-pfp']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh blockchain-sync-sale']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh blockchain-sync-stake']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh blockchain-sync-user']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh business']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh email']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh gateway']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh image-thumbnail']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh marketplace']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh marketplace-sync']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh metadata']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh nft-import']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh nft']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh offer']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh price-conversion']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh sale']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh user']
+          - step:
+              script: ['./ci-scripts/docker-build-app.sh aplos-stats']
+
+      - step:
+          image: node:lts
+          script: ['./ci-scripts/deploy-schema.sh']
+
+      - step:
+          image: hashicorp/terraform:1.4.0
+          script: ['./ci-scripts/terraform-apply.sh']
+
+      - step:
+          script: ['./ci-scripts/cleanup-registry.sh']

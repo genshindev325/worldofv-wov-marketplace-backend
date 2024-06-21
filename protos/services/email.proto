@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package email;
+
+import "google/protobuf/wrappers.proto";
+import "types/serialized_json.proto";
+
+message SendEmailArgs {
+  string key = 1;
+  optional types.SerializedJson data = 2;
+}
+
+service EmailService {
+  rpc send(SendEmailArgs) returns (google.protobuf.BoolValue) {}
+}

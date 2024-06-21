@@ -1,0 +1,19 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../../node_modules/@prisma/client/price-conversion"
+  binaryTargets   = ["native", "linux-musl"]
+  previewFeatures = ["metrics", "tracing"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("PRICE_CONVERSION_DATABASE_URL")
+}
+
+model ConversionRate {
+  currency  String
+  priceUSD  Float
+  updatedAt DateTime
+
+  @@id([currency, updatedAt])
+}

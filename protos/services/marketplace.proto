@@ -1,0 +1,246 @@
+syntax = "proto3";
+
+package marketplace;
+
+import "types/pagination.proto";
+import "types/asset.proto";
+import "types/collection.proto";
+import "types/user.proto";
+
+message TokenAttribute {
+  string trait_type = 1;
+  string value = 2;
+}
+
+message MarketplaceUser {
+  string address = 1;
+  optional string name = 2;
+  optional string customUrl = 3;
+  optional bool blacklisted = 4;
+  optional bool verified = 5;
+  optional string verifiedLevel = 6;
+  repeated types.Asset assets = 7;
+}
+
+message MarketplaceCollection {
+  string collectionId = 1;
+  optional string blockchainId = 2;
+  optional string smartContractAddress = 3;
+  repeated string stakingContractAddresses = 4;
+  optional string creatorAddress = 5;
+  string name = 6;
+  optional string customUrl = 7;
+  optional string thumbnailImageUrl = 8;
+  bool isVerified = 9;
+  bool isVisible = 10;
+  string type = 11;
+  optional string importedAt = 12;
+  optional uint32 createdAt = 13;
+  optional uint32 updatedAt = 14;
+  optional MarketplaceUser creator = 15;
+}
+
+message MarketplaceEdition {
+  string smartContractAddress = 1;
+  string tokenId = 2;
+  string editionId = 3;
+  string ownerAddress = 4;
+  optional string stakingContractAddress = 5;
+  optional string saleId = 6;
+  optional string salePrice = 7;
+  optional string saleAddressVIP180 = 8;
+  optional uint32 cooldownEnd = 9;
+  optional MarketplaceUser owner = 10;
+  optional bool isFreeShipping = 11;
+}
+
+message MarketplaceToken {
+  optional string tokenId = 1;
+  optional string smartContractAddress = 2;
+  optional string name = 3;
+  optional string creatorAddress = 4;
+  optional int32 editionsCount = 5;
+  optional int32 editionsOnSale = 6;
+  repeated string categories = 7;
+  repeated TokenAttribute attributes = 8;
+  optional float score = 9;
+  optional int32 rank = 10;
+  optional string collectionId = 11;
+  repeated types.Asset assets = 12;
+  optional int32 mintedAt = 13;
+  repeated MarketplaceEdition editions = 14;
+  optional string minimumSaleId = 15;
+  optional string minimumSalePrice = 16;
+  optional string maximumSalePrice = 17;
+  optional string minimumSaleAddressVIP180 = 18;
+  optional string highestOfferId = 19;
+  optional string highestOfferPrice = 20;
+  optional string highestOfferAddressVIP180 = 21;
+  optional string minimumAuctionId = 22;
+  optional string minimumAuctionReservePrice = 23;
+  optional string minimumAuctionHighestBid = 24;
+  optional string minimumAuctionAddressVIP180 = 25;
+  optional string minimumAuctionEndTime = 26;
+  optional string stakingEarnings = 27;
+  optional MarketplaceUser creator = 28;
+  optional MarketplaceCollection collection = 29;
+}
+
+enum SortTokensByEnum {
+  PRICE_LOW_TO_HIGH = 0;
+  PRICE_HIGH_TO_LOW = 1;
+  NEWEST_UPDATE = 2;
+  OLDEST_UPDATE = 3;
+  NEWEST_TRANSFER = 4;
+  OLDEST_TRANSFER = 5;
+  NEWEST_LISTING = 6;
+  OLDEST_LISTING = 7;
+  NEWEST_CREATION = 8;
+  OLDEST_CREATION = 9;
+  AUCTION_ENDING_SOON = 10;
+  ID_LOW_TO_HIGH = 11;
+  ID_HIGH_TO_LOW = 12;
+  OFFER_HIGH_TO_LOW = 13;
+  OFFER_LOW_TO_HIGH = 14;
+  RARITY_HIGH_TO_LOW = 15;
+  RARITY_LOW_TO_HIGH = 16;
+  ALPHABETICAL_ASC = 17;
+  ALPHABETICAL_DESC = 18;
+}
+
+enum VerifiedStatusEnum {
+  VERIFIED_AND_CURATOR = 0;
+  CURATOR = 1;
+  VERIFIED = 2;
+  ALL = 3;
+}
+
+enum PaymentFilterEnum {
+  VET = 0;
+  WoV = 1;
+}
+
+enum TokenTypeFilterEnum {
+  ARTIST = 0;
+  PFP = 1;
+}
+
+enum StakedStatusEnum {
+  Staked = 0;
+  Unstaked = 1;
+}
+
+message GetTokensFilterArgs {
+  optional bool onSaleOnly = 1;
+  optional bool onAuctionOnly = 2;
+  optional StakedStatusEnum stakedStatus = 3;
+  optional bool auctionsToSettleOnly = 4;
+  optional VerifiedStatusEnum verifiedLevel = 5;
+  optional PaymentFilterEnum payment = 6;
+  optional string category = 7;
+  optional string collectionId = 8;
+  optional string attributes = 9;
+  optional TokenTypeFilterEnum typeFilter = 10;
+  optional string query = 11;
+  optional string ownerAddress = 12;
+  optional string creatorAddress = 13;
+  optional string smartContractAddress = 14;
+  optional string minPrice = 15;
+  optional string maxPrice = 16;
+  optional uint32 minRank = 17;
+  optional uint32 maxRank = 18;
+  optional bool eligibleToStakeOnly = 19;
+  optional string lastListedAfter = 20;
+  optional bool hideCreated = 21;
+}
+
+message GetTokensArgs {
+  optional types.PaginationArgs pagination = 1;
+  optional GetTokensFilterArgs filters = 2;
+  optional SortTokensByEnum sortBy = 3;
+}
+
+message GetTokensResponse {
+  repeated MarketplaceToken items = 1;
+  optional types.PaginationMeta meta = 2;
+}
+
+message BaseReSyncArgs {
+  optional int32 skip = 1;
+  optional int32 take = 2;
+}
+
+message FindOneTokenArgs {
+  string tokenId = 1;
+  string smartContractAddress = 2;
+}
+
+message GetEditionsResponse { repeated MarketplaceEdition items = 1; }
+
+message GetCollectionsFilterArgs { string creatorAddress = 1; }
+
+message GetCollectionsArgs {
+  optional types.PaginationArgs pagination = 1;
+  GetCollectionsFilterArgs filters = 2;
+}
+
+message GetCollectionsResponse {
+  repeated MarketplaceCollection items = 1;
+  types.PaginationMeta meta = 2;
+}
+
+message GetMissingTokensArgs {
+  optional string ownerAddress = 1;
+  optional string set = 2;
+  optional types.PaginationArgs pagination = 3;
+}
+
+message MissingTokens {
+  string name = 1;
+  string country = 2;
+  repeated MediaItem media = 3;
+  string collectionName = 4;
+  string collectionThumbnail = 5;
+  string collectionCustomUrl = 6;
+}
+
+message GetMissingTokensResponse {
+  repeated MissingTokens tokens = 1;
+  types.PaginationMeta meta = 2;
+}
+
+message MediaItem {
+  string url = 1;
+  string mimeType = 2;
+  string size = 3;
+}
+
+message AggregatedToken {
+  string tokenId = 1;
+  string smartContractAddress = 2;
+  string name = 3;
+  optional string description = 4;
+  string creatorAddress = 5;
+  repeated TokenAttribute attributes = 6;
+  optional float score = 7;
+  optional int32 rank = 8;
+  int32 editionsCount = 9;
+  int32 editionsOnSale = 10;
+  optional float royalty = 11;
+  optional int32 mintedAt = 12;
+  optional string stakingEarnings = 13;
+  optional types.User creator = 14;
+  optional types.Collection collection = 15;
+  repeated types.Asset assets = 16;
+}
+
+message GetSalesResponse { repeated string saleIds = 1; }
+
+service MarketplaceService {
+  rpc getToken(FindOneTokenArgs) returns (AggregatedToken) {}
+  rpc getTokens(GetTokensArgs) returns (GetTokensResponse) {}
+  rpc getEditions(FindOneTokenArgs) returns (GetEditionsResponse) {}
+  rpc getCollections(GetCollectionsArgs) returns (GetCollectionsResponse) {}
+  rpc getMissingTokens(GetMissingTokensArgs)
+      returns (GetMissingTokensResponse) {}
+}

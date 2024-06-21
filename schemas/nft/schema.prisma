@@ -1,0 +1,136 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../../node_modules/@prisma/client/nft"
+  binaryTargets   = ["native", "linux-musl"]
+  previewFeatures = ["metrics", "tracing"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("NFT_DATABASE_URL")
+}
+
+model Brand {
+  id                String @id
+  name              String @unique
+  description       String
+  thumbnailImageUrl String
+  position          Int    @db.SmallInt
+
+  collections Collection[]
+}
+
+model Collection {
+  collectionId             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  blockchainId             String?        @unique
+  smartContractAddress     String?        @unique @db.Citext
+  burnContractAddress      String?        @db.Citext
+  cooldownContractAddress  String?        @db.Citext
+  creatorAddress           String?        @db.Citext
+  stakingContractAddresses String[]       @db.Citext
+  stakingEndDate           DateTime?
+  name                     String
+  description              String?
+  customUrl                String?        @unique @db.Citext
+  mintPageUrl              String?
+  thumbnailImageUrl        String?
+  bannerImageUrl           String?
+  minimumOffer             Decimal?       @db.Decimal(78, 0)
+  isVerified               Boolean        @default(false)
+  isVisible                Boolean        @default(true)
+  isMinting                Boolean        @default(false)
+  isWoVCollection          Boolean        @default(false)
+  type                     CollectionType
+  importedAt               DateTime?      @db.Timestamp
+  fetcherConfig            Json?          @db.JsonB
+  createdAt                Int?
+  updatedAt                Int?
+  brandId                  String?
+
+  brand Brand? @relation(fields: [brandId], references: [id], onDelete: SetNull)
+
+  tokens Token[]
+
+  @@index([blockchainId])
+  @@index([smartContractAddress])
+  @@index([creatorAddress])
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin)
+  @@index([isVerified])
+  @@index([isVisible])
+  @@index([isMinting])
+  @@index([type])
+  @@index([createdAt])
+  @@index([updatedAt])
+}
+
+model Token {
+  tokenId              String
+  smartContractAddress String          @db.Citext
+  name                 String
+  description          String?
+  creatorAddress       String          @db.Citext
+  editionsCount        Int
+  royalty              Float
+  categories           TokenCategory[]
+  attributes           Json?           @db.JsonB
+  score                Float?
+  rank                 Int?
+  collectionId         String?         @db.Uuid
+  imageUrl             String
+  imageMimeType        String
+  mintedAt             Int
+  stakingEarnings      Decimal?        @db.Decimal(78, 0)
+
+  collection Collection? @relation(fields: [collectionId], references: [collectionId], onDelete: SetNull)
+
+  editions Edition[]
+
+  @@id([tokenId, smartContractAddress])
+  @@index([smartContractAddress])
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin)
+  @@index([creatorAddress])
+  @@index([categories])
+  @@index([score])
+  @@index([rank])
+  @@index([collectionId])
+  @@index([mintedAt])
+}
+
+model Edition {
+  tokenId                String
+  editionId              String
+  smartContractAddress   String   @db.Citext
+  stakingContractAddress String?  @db.Citext
+  ownerAddress           String   @db.Citext
+  isFreeShipping         Boolean?
+  cooldownEnd            Int?
+  updatedAt              Int?
+
+  token Token @relation(fields: [tokenId, smartContractAddress], references: [tokenId, smartContractAddress], onDelete: Cascade)
+
+  @@id([editionId, smartContractAddress])
+  @@index([tokenId, smartContractAddress])
+  @@index([tokenId, editionId, smartContractAddress])
+  @@index([ownerAddress])
+  @@index([updatedAt])
+}
+
+enum TokenCategory {
+  ART
+  PFP
+  PHOTO
+  MUSIC
+  GAME
+  COLLECTIBLE
+  TRADING_CARD
+  SPORT
+  UTILITY
+  MEME
+  OTHER
+  PHYGITAL
+}
+
+enum CollectionType {
+  MARKETPLACE
+  EXTERNAL
+}

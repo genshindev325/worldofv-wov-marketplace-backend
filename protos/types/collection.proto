@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package types;
+
+import "types/token.proto";
+import "types/user.proto";
+import "types/brand.proto";
+
+message StandardIpfsFetcherConfig { string ipfsGateway = 1; }
+message StandardArweaveFetcherConfig {}
+message StandardHttpFetcherConfig {}
+
+message FetcherConfig {
+  oneof fetcherConfig {
+    StandardIpfsFetcherConfig standardIpfs = 1;
+    StandardArweaveFetcherConfig standardArweave = 2;
+    StandardHttpFetcherConfig standardHttp = 3;
+  }
+}
+
+message Collection {
+  string collectionId = 1;
+  optional string blockchainId = 2;
+  optional string smartContractAddress = 3;
+  optional string burnContractAddress = 4;
+  optional string cooldownContractAddress = 5;
+  repeated string stakingContractAddresses = 6;
+  optional string creatorAddress = 7;
+  string name = 8;
+  optional string description = 9;
+  optional string customUrl = 10;
+  optional string mintPageUrl = 11;
+  optional string thumbnailImageUrl = 12;
+  optional string bannerImageUrl = 13;
+  optional string minimumOffer = 14;
+  bool isVerified = 15;
+  bool isVisible = 16;
+  bool isMinting = 17;
+  bool isWoVCollection = 18;
+  string type = 19;
+  optional string importType = 20;
+  optional string importedAt = 21;
+  optional uint32 createdAt = 22;
+  optional uint32 updatedAt = 23;
+  optional FetcherConfig fetcherConfig = 24;
+  repeated Token tokens = 25;
+  optional User creator = 26;
+  optional string stakingEndDate = 27;
+  optional string brandId = 28;
+  optional Brand brand = 29;
+}

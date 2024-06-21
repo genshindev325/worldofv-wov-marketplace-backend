@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package types;
+
+import "types/collection.proto";
+
+message MinimumOffer {
+  string userAddress = 1;
+  string smartContractAddress = 2;
+  optional int32 editionCount = 3;
+  optional string price = 4;
+  optional types.Collection collection = 5;
+}

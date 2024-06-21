@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package types;
+
+import "types/user.proto";
+
+message Auction {
+  string auctionId = 1;
+  string tokenId = 2;
+  string editionId = 3;
+  string smartContractAddress = 4;
+  string sellerAddress = 5;
+  optional string settlorAddress = 6;
+  optional string highestBidderAddress = 7;
+  string reservePrice = 8;
+  optional string highestBid = 9;
+  optional string addressVIP180 = 10;
+  string startingTime = 11;
+  string endTime = 12;
+  optional string status = 13;
+  optional int32 createdAt = 14;
+  optional int32 updatedAt = 15;
+}
+
+message AuctionHistory {
+  string id = 1;
+  string event = 2;
+  int32 timestamp = 3;
+  string txID = 4;
+  string auctionId = 5;
+  string smartContractAddress = 6;
+  string tokenId = 7;
+  optional types.User user = 8;
+  optional string price = 9;
+  optional string updatedDate = 10;
+}

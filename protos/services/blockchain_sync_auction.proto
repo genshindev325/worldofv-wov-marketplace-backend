@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package blockchain_sync_auction;
+
+import "types/user.proto";
+import "types/auction.proto";
+
+message GetAuctionFromBlockchainArgs {
+  string auctionId = 1;
+  string tokenId = 2;
+  optional string smartContractAddress = 3;
+}
+
+message GetAuctionHistoryArgs {
+  string auctionId = 1;
+  optional bool bidsOnly = 2;
+}
+
+message GetAuctionParticipantsArgs { string auctionId = 1; }
+
+message GetAuctionHistoryResponse { repeated types.AuctionHistory history = 1; }
+
+message GetAuctionParticipantsResponse { repeated types.User participants = 1; }
+
+service BlockchainSyncAuctionService {
+  rpc getAuctionFromBlockchain(GetAuctionFromBlockchainArgs)
+      returns (types.Auction) {}
+  rpc getAuctionHistory(GetAuctionHistoryArgs)
+      returns (GetAuctionHistoryResponse) {}
+  rpc getAuctionParticipants(GetAuctionParticipantsArgs)
+      returns (GetAuctionParticipantsResponse) {}
+}

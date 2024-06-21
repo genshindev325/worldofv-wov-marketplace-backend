@@ -1,0 +1,24 @@
+{
+  "ignore": {
+    "@types/graphql-upload": {
+      "reason": "Can't update graphql-upload.",
+      "versions": ">8"
+    },
+    "file-type": {
+      "reason": "ESM only module.",
+      "versions": ">16"
+    },
+    "graphql-upload": {
+      "reason": "ESM only module.",
+      "versions": ">13"
+    },
+    "multiformats": {
+      "reason": "ESM only module.",
+      "versions": ">9"
+    },
+    "typescript": {
+      "reason": "Conflicting peer dependencies.",
+      "versions": ">4"
+    }
+  }
+}

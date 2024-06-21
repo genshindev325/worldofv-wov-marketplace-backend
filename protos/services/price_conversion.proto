@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package price_conversion;
+
+import "google/protobuf/empty.proto";
+
+message ConversionRate {
+  string currency = 1;
+  double priceUSD = 2;
+  string updatedAt = 3;
+}
+
+message GetLatestRatesResponse { repeated ConversionRate rates = 1; }
+
+message GetLatestRatesByCurrencyResponse { map<string, double> rates = 1; }
+
+service PriceConversionService {
+  rpc getLatestRates(google.protobuf.Empty) returns (GetLatestRatesResponse) {}
+  rpc getLatestRatesByCurrency(google.protobuf.Empty)
+      returns (GetLatestRatesByCurrencyResponse) {}
+}

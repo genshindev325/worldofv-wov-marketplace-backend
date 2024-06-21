@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package types;
+
+message Edition {
+  string tokenId = 1;
+  string editionId = 2;
+  string smartContractAddress = 3;
+  optional string stakingContractAddress = 4;
+  string ownerAddress = 5;
+  optional bool isFreeShipping = 6;
+  optional uint32 updatedAt = 7;
+  optional uint32 cooldownEnd = 8;
+}

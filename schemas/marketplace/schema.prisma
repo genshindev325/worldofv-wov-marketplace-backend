@@ -1,0 +1,206 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../../node_modules/@prisma/client/marketplace"
+  previewFeatures = ["metrics", "tracing"]
+  binaryTargets   = ["native", "linux-musl"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("MARKETPLACE_DATABASE_URL")
+}
+
+model Tokens {
+  tokenId              String
+  smartContractAddress String @db.Citext
+
+  name String
+
+  creatorAddress String @db.Citext
+
+  editionsCount       Int
+  editionsOnSale      Int? @default(0)
+  editionsInGraveyard Int? @default(0)
+
+  categories TokensCategory[]
+
+  attributes Json?  @db.JsonB
+  score      Float?
+  rank       Int?
+
+  collectionId String? @db.Uuid
+
+  media Json @db.JsonB
+
+  minimumSaleId            String?  @unique
+  minimumSalePrice         Decimal? @db.Decimal(78, 0)
+  maximumSalePrice         Decimal? @db.Decimal(78, 0)
+  minimumSaleAddressVIP180 String?  @db.Citext
+
+  highestOfferId            String?
+  highestOfferPrice         Decimal?  @db.Decimal(78, 0)
+  highestOfferAddressVIP180 String?   @db.Citext
+  highestOfferEndTime       DateTime?
+
+  minimumAuctionId            String?   @unique
+  minimumAuctionReservePrice  Decimal?  @db.Decimal(78, 0)
+  minimumAuctionHighestBid    Decimal?  @db.Decimal(78, 0)
+  minimumAuctionAddressVIP180 String?   @db.Citext
+  minimumAuctionEndTime       DateTime? @db.Timestamptz()
+
+  mintedAt          Int
+  lastListedAt      Int?
+  lastTransferredAt Int?
+  updatedAt         Int?
+
+  stakingEarnings Decimal? @db.Decimal(78, 0)
+
+  version Int @default(0)
+
+  @@id([tokenId, smartContractAddress])
+  @@index([smartContractAddress])
+  @@index([name])
+  @@index([creatorAddress])
+  @@index([editionsCount])
+  @@index([editionsOnSale])
+  @@index([editionsInGraveyard])
+  @@index([categories])
+  @@index([attributes(ops: JsonbPathOps)], type: Gin)
+  @@index([score])
+  @@index([rank])
+  @@index([collectionId])
+  @@index([highestOfferPrice])
+  @@index([minimumSalePrice])
+  @@index([minimumAuctionReservePrice])
+  @@index([minimumAuctionHighestBid])
+  @@index([minimumSalePrice, minimumAuctionReservePrice, minimumAuctionHighestBid])
+  @@index([minimumSaleAddressVIP180, minimumAuctionAddressVIP180])
+  @@index([mintedAt])
+  @@index([lastListedAt])
+  @@index([lastTransferredAt])
+  @@index([updatedAt])
+}
+
+model Editions {
+  tokenId              String
+  editionId            String
+  smartContractAddress String @db.Citext
+
+  stakingContractAddress String? @db.Citext
+
+  ownerAddress String @db.Citext
+
+  saleId            String?  @unique
+  salePrice         Decimal? @db.Decimal(78, 0)
+  saleAddressVIP180 String?  @db.Citext
+  isFreeShipping    Boolean?
+
+  auctionId            String?   @unique
+  auctionReservePrice  Decimal?  @db.Decimal(78, 0)
+  auctionHighestBid    Decimal?  @db.Decimal(78, 0)
+  auctionAddressVIP180 String?   @db.Citext
+  auctionEndTime       DateTime? @db.Timestamptz()
+
+  cooldownEnd Int?
+
+  lastListedAt      Int?
+  lastTransferredAt Int?
+  updatedAt         Int?
+
+  @@id([tokenId, editionId, smartContractAddress])
+  @@index([smartContractAddress])
+  @@index([tokenId, smartContractAddress])
+  @@index([editionId, smartContractAddress])
+  @@index([ownerAddress])
+  @@index([saleId])
+  @@index([salePrice])
+  @@index([saleAddressVIP180])
+  @@index([auctionId])
+  @@index([auctionReservePrice])
+  @@index([auctionHighestBid])
+  @@index([auctionAddressVIP180])
+  @@index([auctionEndTime])
+  @@index([salePrice, auctionReservePrice, auctionHighestBid])
+  @@index([saleAddressVIP180, auctionAddressVIP180])
+  @@index([lastListedAt])
+  @@index([lastTransferredAt])
+  @@index([updatedAt])
+}
+
+model Collections {
+  collectionId String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  blockchainId String? @unique
+
+  smartContractAddress     String?  @unique @db.Citext
+  stakingContractAddresses String[] @db.Citext
+  creatorAddress           String?  @db.Citext
+
+  name String
+
+  customUrl String? @unique @db.Citext
+
+  thumbnailImageUrl String?
+
+  isVerified Boolean @default(false)
+  isVisible  Boolean @default(false)
+
+  type CollectionsType
+
+  importedAt DateTime?
+  createdAt  Int?
+  updatedAt  Int?
+
+  @@index([blockchainId])
+  @@index([collectionId])
+  @@index([smartContractAddress])
+  @@index([creatorAddress])
+  @@index([isVerified])
+  @@index([isVisible])
+  @@index([type])
+  @@index([createdAt])
+  @@index([updatedAt])
+}
+
+model Users {
+  address String  @id @db.Citext
+  name    String? @db.Citext
+
+  customUrl String?
+
+  assets Json
+
+  blacklisted   Boolean             @default(false)
+  verified      Boolean             @default(false)
+  verifiedLevel UsersVerifiedStatus @default(NOT_VERIFIED)
+
+  @@index([name])
+  @@index([blacklisted])
+  @@index([verified])
+  @@index([verifiedLevel])
+}
+
+enum UsersVerifiedStatus {
+  NOT_VERIFIED
+  VERIFIED
+  CURATED
+}
+
+enum TokensCategory {
+  ART
+  PFP
+  PHOTO
+  MUSIC
+  GAME
+  COLLECTIBLE
+  TRADING_CARD
+  SPORT
+  UTILITY
+  MEME
+  OTHER
+  PHYGITAL
+}
+
+enum CollectionsType {
+  MARKETPLACE
+  EXTERNAL
+}

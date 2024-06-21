@@ -1,0 +1,64 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../../node_modules/@prisma/client/user"
+  binaryTargets   = ["native", "linux-musl"]
+  previewFeatures = ["metrics", "tracing"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("USER_DATABASE_URL")
+}
+
+model User {
+  address     String  @id @db.Citext
+  profileId   Int?    @unique
+  name        String? @db.Citext
+  description String? @db.Citext
+  email       String? @unique @db.Citext
+
+  firstName String?
+  lastName  String?
+
+  customUrl    String? @unique @db.Citext
+  websiteUrl   String?
+  facebookUrl  String?
+  twitterUrl   String?
+  instagramUrl String?
+  discordUrl   String?
+
+  blacklisted   Boolean        @default(false)
+  verified      Boolean        @default(false)
+  verifiedLevel VerifiedStatus @default(NOT_VERIFIED)
+
+  profileImageUrl String?
+  bannerImageUrl  String?
+
+  landingTab ProfileTabs?
+
+  showEmail   Boolean @default(false)
+  showBalance Boolean @default(false)
+
+  isAdmin                    Boolean @default(false)
+  isEmailNotificationEnabled Boolean @default(false)
+
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin)
+  @@index([customUrl])
+  @@index([blacklisted])
+  @@index([verified])
+  @@index([verifiedLevel])
+}
+
+enum VerifiedStatus {
+  NOT_VERIFIED
+  VERIFIED
+  CURATED
+}
+
+enum ProfileTabs {
+  COLLECTED
+  CREATED
+  ON_SALE
+  ON_AUCTION
+  COLLECTIONS
+}

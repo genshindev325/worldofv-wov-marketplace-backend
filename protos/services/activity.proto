@@ -1,0 +1,107 @@
+syntax = "proto3";
+
+package activity;
+
+import "types/user.proto";
+import "types/token.proto";
+import "types/collection.proto";
+import "types/asset.proto";
+
+enum ActivityEventKind {
+  MINT = 0;
+  BURN = 1;
+  TRANSFER = 2;
+  AUCTION_CREATED = 3;
+  AUCTION_SETTLED = 4;
+  AUCTION_EXPIRED = 5;
+  AUCTION_CANCELED = 6;
+  SALE_CREATED = 7;
+  SALE_SETTLED = 8;
+  SALE_CANCELED = 9;
+  OFFER_CREATED = 10;
+  OFFER_ACCEPTED = 11;
+  OFFER_CANCELED = 12;
+  STAKE_STARTED = 13;
+  STAKE_ENDED = 14;
+}
+
+message ActivityEvent {
+  ActivityEventKind event = 1;
+  string dateTime = 2;
+  optional string resourceId = 3;
+  optional string smartContractAddress = 4;
+  optional string tokenId = 5;
+  optional string editionId = 6;
+  optional string price = 7;
+  optional string payment = 8;
+  optional string fromAddress = 9;
+  optional string toAddress = 10;
+  optional types.Collection collection = 11;
+  optional types.Token token = 12;
+  optional types.User fromUser = 13;
+  optional types.User toUser = 14;
+  optional types.Asset asset = 15;
+}
+
+message GetUserActivityArgs {
+  string userAddress = 1;
+  optional string fromDate = 2;
+  optional uint32 page = 3;
+  optional uint32 perPage = 4;
+}
+
+message GetCollectionActivityArgs {
+  string smartContractAddress = 1;
+  optional string fromDate = 2;
+  optional uint32 page = 3;
+  optional uint32 perPage = 4;
+}
+
+message GetTokenActivityArgs {
+  string smartContractAddress = 1;
+  string tokenId = 2;
+  optional string fromDate = 3;
+  optional uint32 page = 4;
+  optional uint32 perPage = 5;
+}
+
+message GetActivityResponse {
+  optional bool hasMore = 1;
+  repeated ActivityEvent events = 2;
+}
+
+message ActivityUser {
+  types.User user = 1;
+  int32 count = 2;
+}
+
+message GetRecepientCountForCollectionResponse {
+  optional bool hasMore = 1;
+  repeated ActivityUser users = 2;
+}
+
+message LastTransfersUser {
+  types.User user = 1;
+  string dateTime = 2;
+}
+
+message GetLastTransfersForCollectionResponse {
+  optional bool hasMore = 1;
+  repeated LastTransfersUser users = 2;
+}
+
+service UserActivityService {
+  rpc getActivity(GetUserActivityArgs) returns (GetActivityResponse) {}
+}
+
+service CollectionActivityService {
+  rpc getActivity(GetCollectionActivityArgs) returns (GetActivityResponse) {}
+  rpc getRecepientCountForCollection(GetCollectionActivityArgs)
+      returns (GetRecepientCountForCollectionResponse) {}
+  rpc getLastTransfersForCollection(GetCollectionActivityArgs)
+      returns (GetLastTransfersForCollectionResponse) {}
+}
+
+service TokenActivityService {
+  rpc getActivity(GetTokenActivityArgs) returns (GetActivityResponse) {}
+}

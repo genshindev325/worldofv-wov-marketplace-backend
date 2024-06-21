@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package blockchain_stats;
+
+message GetSalesVolumeRangeArgs {
+  string type = 1;
+  int32 from = 2;
+  int32 to = 3;
+}
+
+message GetSalesVolumeArgs {
+  repeated string smartContractAddresses = 1;
+  GetSalesVolumeRangeArgs range = 2;
+}
+
+message GetSalesVolumeTotalObject {
+  string payment = 1;
+  optional string addressVIP180 = 2;
+  string value = 3;
+  string asWei = 4;
+}
+
+message GetSalesVolumeTransactionsObject {
+  int32 count = 1;
+  repeated string list = 2;
+}
+
+message GetSalesVolumeGenericObject {
+  repeated GetSalesVolumeTotalObject total = 1;
+  optional GetSalesVolumeTransactionsObject transactions = 2;
+  optional string error = 3;
+}
+
+message GetSalesVolumeResult {
+  GetSalesVolumeGenericObject sales = 1;
+  GetSalesVolumeGenericObject offers = 2;
+  GetSalesVolumeGenericObject auctions = 3;
+}
+
+service BlockchainStatsService {
+  rpc getSalesVolume(GetSalesVolumeArgs) returns (GetSalesVolumeResult) {}
+}

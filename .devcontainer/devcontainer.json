@@ -1,0 +1,16 @@
+{
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "wov-marketplace-backend-ms",
+  "workspaceFolder": "/wov-marketplace-backend-ms",
+  "remoteUser": "node",
+  "otherPortsAttributes": { "onAutoForward": "ignore" },
+
+  "extensions": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "prisma.prisma",
+    "zxh404.vscode-proto3",
+    "hashicorp.terraform",
+    "foxundermoon.shell-format"
+  ]
+}

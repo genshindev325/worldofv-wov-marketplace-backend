@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package sale;
+
+import "google/protobuf/wrappers.proto";
+
+import "types/sale.proto";
+import "types/serialized_json.proto";
+
+message FindUniqueSaleArgs { string saleId = 1; }
+
+message UpsertSaleArgs {
+  FindUniqueSaleArgs where = 1;
+  types.Sale data = 2;
+}
+
+message FindManySalesResponse { repeated types.Sale sales = 1; }
+
+service SaleService {
+  rpc findFirst(types.SerializedJson) returns (types.Sale) {}
+  rpc findUnique(types.SerializedJson) returns (types.Sale) {}
+  rpc findMany(types.SerializedJson) returns (FindManySalesResponse) {}
+  rpc count(types.SerializedJson) returns (google.protobuf.Int32Value) {}
+  rpc upsert(types.SerializedJson) returns (types.Sale) {}
+}

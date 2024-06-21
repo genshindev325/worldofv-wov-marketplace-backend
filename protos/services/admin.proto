@@ -1,0 +1,159 @@
+syntax = "proto3";
+
+package admin;
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
+import "types/user.proto";
+import "types/token.proto";
+import "types/collection.proto";
+import "types/asset.proto";
+
+/**
+ * Home banner service
+ */
+
+message HomeBanner {
+  string id = 1;
+  string image = 2;
+  uint32 position = 3;
+  optional string collectionId = 4;
+  optional string artist = 5;
+  optional string url = 6;
+}
+
+message CreateHomeBannerArgs {
+  string image = 1;
+  uint32 position = 2;
+  optional string collectionId = 3;
+  optional string artist = 4;
+  optional string url = 5;
+}
+
+message UpdateHomeBannerArgs {
+  string id = 1;
+  optional string image = 2;
+  optional uint32 position = 3;
+  optional string collectionId = 4;
+  optional string artist = 5;
+  optional string url = 6;
+}
+
+message DeleteHomeBannerArgs { string id = 1; }
+
+message GetAllBannersResponse { repeated HomeBanner banners = 1; }
+
+service HomeBannerService {
+  rpc getAll(google.protobuf.Empty) returns (GetAllBannersResponse) {}
+  rpc create(CreateHomeBannerArgs) returns (HomeBanner) {}
+  rpc update(UpdateHomeBannerArgs) returns (HomeBanner) {}
+  rpc delete (DeleteHomeBannerArgs) returns (google.protobuf.BoolValue) {}
+}
+
+/**
+ * Verified drop service
+ */
+
+message VerifiedDrop {
+  string id = 1;
+  uint32 position = 2;
+  string dateTime = 3;
+  optional string imageUrl = 4;
+  optional string title = 5;
+  optional string address = 6;
+  optional string collectionId = 7;
+  optional string tokenId = 8;
+  optional types.User artist = 9;
+  optional types.Collection collection = 10;
+  optional types.Token token = 11;
+  optional types.Asset asset = 12;
+}
+
+message UpsertVerifiedDropArgs {
+  optional string id = 1;
+  uint32 position = 2;
+  string dateTime = 3;
+  optional string imageUrl = 4;
+  optional string title = 5;
+  optional string address = 6;
+  optional string collectionId = 7;
+  optional string tokenId = 8;
+}
+
+message DeleteVerifiedDropArgs { string id = 1; }
+
+message GetAllVerifiedDropsResponse { repeated VerifiedDrop drops = 1; }
+
+service VerifiedDropService {
+  rpc getAll(google.protobuf.Empty) returns (GetAllVerifiedDropsResponse) {}
+  rpc upsert(UpsertVerifiedDropArgs) returns (VerifiedDrop) {}
+  rpc delete (DeleteVerifiedDropArgs) returns (google.protobuf.BoolValue) {}
+}
+
+/**
+ * Top user service
+ */
+
+enum TopUserKind {
+  TOP_COLLECTOR = 0;
+  TOP_ARTIST = 1;
+}
+
+message TopUser {
+  TopUserKind kind = 1;
+  uint32 position = 2;
+  string address = 3;
+  optional types.User user = 4;
+}
+
+message UpsertTopUserArgs {
+  TopUserKind kind = 1;
+  uint32 position = 2;
+  string address = 3;
+}
+
+message GetAllTopUsersArgs { TopUserKind kind = 1; }
+
+message DeleteTopUserArgs {
+  TopUserKind kind = 1;
+  string address = 2;
+}
+
+message GetAllTopUsersResponse { repeated TopUser users = 1; }
+
+service TopUserService {
+  rpc getAll(GetAllTopUsersArgs) returns (GetAllTopUsersResponse) {}
+  rpc upsert(UpsertTopUserArgs) returns (TopUser) {}
+  rpc delete (DeleteTopUserArgs) returns (google.protobuf.BoolValue) {}
+}
+
+/**
+ * Home collection service
+ */
+
+message HomeCollection {
+  optional string id = 1; // id will always be set if the collection is
+                          // returned from the service
+  uint32 position = 2;
+  string title = 3;
+  string startsAt = 4;
+  string bannerImageUrl = 5;
+  string bannerLinkUrl = 6;
+  optional string avatarImageUrl = 7;
+  optional string avatarLinkUrl = 8;
+  optional string avatarName = 9;
+  optional string avatarVerifiedLevel = 10;
+}
+
+message DeleteHomeCollectionArgs { string id = 1; }
+
+message GetAllHomeCollectionsResponse {
+  repeated HomeCollection collections = 1;
+}
+
+service HomeCollectionService {
+  rpc getAll(google.protobuf.Empty) returns (GetAllHomeCollectionsResponse) {}
+  rpc upsert(HomeCollection) returns (HomeCollection) {}
+  rpc delete (DeleteHomeCollectionArgs) returns (google.protobuf.BoolValue) {}
+}

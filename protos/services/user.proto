@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package user;
+
+import "types/asset.proto";
+import "types/serialized_json.proto";
+import "types/user.proto";
+
+message FindUserArgs {
+  optional string address = 1;
+  optional int32 profileId = 2;
+  optional string customUrl = 3;
+  optional string email = 4;
+}
+
+message UpsertUserArgs {
+  string address = 1;
+  optional int32 profileId = 2;
+  optional string name = 3;
+  optional string email = 4;
+  optional types.AssetSource profileImageSource = 5;
+  optional types.AssetSource bannerImageSource = 6;
+  optional string description = 7;
+  optional string customUrl = 8;
+  optional string websiteUrl = 9;
+  optional string facebookUrl = 10;
+  optional string twitterUrl = 11;
+  optional string discordUrl = 12;
+  optional bool blacklisted = 13;
+  optional bool verified = 14;
+  optional types.VerifiedStatus verifiedLevel = 15;
+  optional types.ProfileTabs landingTab = 16;
+  optional bool isAdmin = 17;
+  optional bool showEmail = 18;
+  optional bool showBalance = 19;
+  optional bool isEmailNotificationEnabled = 20;
+  optional string firstName = 21;
+  optional string lastName = 22;
+}
+
+message UpdateUserArgs {
+  optional string address = 1;
+  optional int32 profileId = 2;
+  optional string name = 3;
+  optional string email = 4;
+  optional types.AssetSource profileImageSource = 5;
+  optional types.AssetSource bannerImageSource = 6;
+  optional string description = 7;
+  optional string customUrl = 8;
+  optional string websiteUrl = 9;
+  optional string facebookUrl = 10;
+  optional string twitterUrl = 11;
+  optional string discordUrl = 12;
+  optional string instagramUrl = 13;
+  optional bool blacklisted = 14;
+  optional bool verified = 15;
+  optional types.VerifiedStatus verifiedLevel = 16;
+  optional types.ProfileTabs landingTab = 17;
+  optional bool isAdmin = 18;
+  optional bool showEmail = 19;
+  optional bool showBalance = 20;
+  optional bool isEmailNotificationEnabled = 21;
+  optional string firstName = 22;
+  optional string lastName = 23;
+}
+
+message SearchUsersByStringArgs {
+  string text = 1;
+  optional int32 limit = 2;
+}
+
+message SearchUsersByStringResponse { repeated types.User users = 1; }
+
+message FindManyUserResponse { repeated types.User users = 1; }
+
+service UserService {
+  rpc findOne(FindUserArgs) returns (types.User) {}
+  rpc findUnique(types.SerializedJson) returns (types.User) {}
+  rpc findMany(types.SerializedJson) returns (FindManyUserResponse) {}
+  rpc searchUsersByString(SearchUsersByStringArgs)
+      returns (SearchUsersByStringResponse) {}
+  rpc upsert(UpsertUserArgs) returns (types.User) {}
+  rpc update(UpdateUserArgs) returns (types.User) {}
+}

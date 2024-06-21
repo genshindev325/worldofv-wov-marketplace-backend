@@ -1,0 +1,40 @@
+generator client {
+    provider        = "prisma-client-js"
+    output          = "../../node_modules/@prisma/client/image-thumbnail"
+    binaryTargets   = ["native", "linux-musl"]
+    previewFeatures = ["metrics", "tracing"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("IMAGE_THUMBNAIL_DATABASE_URL")
+}
+
+model Thumbnail {
+    key        String          @id
+    size       AssetSize
+    mimeType   String
+    entityKind AssetEntityKind
+    entity     Json            @db.JsonB
+
+    @@index([size])
+    @@index([entityKind])
+    @@index([entity(ops: JsonbPathOps)], type: Gin)
+}
+
+enum AssetSize {
+    STATIC_COVER_128
+    STATIC_COVER_256
+    STATIC_COVER_512
+    ANIMATED_INSIDE_512
+    ANIMATED_INSIDE_1024
+    ORIGINAL
+}
+
+enum AssetEntityKind {
+    TOKEN
+    USER_BANNER
+    USER_AVATAR
+    // COLLECTION_BANNER 
+    // COLLECTION_AVATAR 
+}

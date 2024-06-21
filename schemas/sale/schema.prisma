@@ -1,0 +1,50 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../../node_modules/@prisma/client/sale"
+  binaryTargets   = ["native", "linux-musl"]
+  previewFeatures = ["metrics", "tracing"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("SALE_DATABASE_URL")
+}
+
+model Sale {
+  saleId               String @id
+  tokenId              String
+  editionId            String
+  smartContractAddress String @db.Citext
+
+  sellerAddress String  @db.Citext
+  buyerAddress  String? @db.Citext
+
+  price         Decimal @db.Decimal(78, 0)
+  addressVIP180 String? @db.Citext
+
+  startingTime DateTime   @db.Timestamptz()
+  status       SaleStatus @default(UNKNOWN)
+
+  createdAt Int?
+  updatedAt Int?
+
+  @@index([smartContractAddress])
+  @@index([tokenId, smartContractAddress])
+  @@index([editionId, smartContractAddress])
+  @@index([tokenId, editionId, smartContractAddress])
+  @@index([sellerAddress])
+  @@index([buyerAddress])
+  @@index([price])
+  @@index([addressVIP180])
+  @@index([startingTime])
+  @@index([status])
+  @@index([createdAt])
+  @@index([updatedAt])
+}
+
+enum SaleStatus {
+  UNKNOWN
+  LISTED
+  PURCHASED
+  CANCELLED
+}

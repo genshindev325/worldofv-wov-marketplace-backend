@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package blockchain_sync_pfp;
+
+import "google/protobuf/empty.proto";
+
+message FindSmartContractArgs { string smartContractAddress = 1; }
+
+service BlockchainSyncPfpService {
+  rpc pushSmartContract(FindSmartContractArgs) returns (google.protobuf.Empty) {
+  }
+  rpc removeSmartContract(FindSmartContractArgs)
+      returns (google.protobuf.Empty) {}
+}
